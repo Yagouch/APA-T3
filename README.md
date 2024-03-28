@@ -1,6 +1,6 @@
 # Tercera tarea de APA: Multiplicaciones de vectores y ortogonalidad
 
-## Nom i cognoms
+## Nom i cognoms: Yago Carballo Barroso
 
 El fichero `algebra/vectores.py` incluye la definición de la clase `Vector` con los
 métodos desarrollados en clase, que incluyen la construcción, representación y
@@ -73,14 +73,77 @@ $v_2$, y $v_1^\perp$ es normal (perpendicular) a $v_2$.
 #### Ejecución de los tests unitarios
 
 Inserte a continuación una captura de pantalla que muestre el resultado de ejecutar el
-fichero `algebra/vectores.py` con la opción *verbosa*, de manera que se muestre el
-resultado de la ejecución de los tests unitarios.
+fichero `algebra/vectores.py` con la opción *verbosa*, de manera que se muestre el resultado de la ejecución de los tests unitarios.
+
+![Captura de pantalla](img/unitTests.png)
 
 #### Código desarrollado
 
 Inserte a continuación el código de los métodos desarrollados en esta tarea, usando los
 comandos necesarios para que se realice el realce sintáctico en Python del mismo (no
 vale insertar una imagen o una captura de pantalla, debe hacerse en formato *markdown*).
+
+```python
+
+    def __mul__(self, other):
+        """
+        Descripción: Multiplicación de Vector con enteros o otro Vector
+        Args: (Vector, Vector)
+        Salida: Vector
+        """
+        if isinstance(other, (int, float, complex)):
+            return Vector(n * other for n in self)
+        else:
+            return Vector(uno * otro for uno, otro in zip(self, other))
+
+    __rmul__ = __mul__
+
+    def __matmul__(self, other):
+        """
+        Descripción: Implementación de producto matricial
+        Args: (Vector, Vector)
+        Salida: int
+        """
+        sum = 0
+        for n in Vector(self * other):
+            sum += n
+        return sum
+
+    __rmatmul__ = __matmul__
+
+    def __abs__(self):
+        """
+        Descripción: Determina el valor absoluto de un objeto de clase Vector
+        Args: (Vector, Vector)
+        Salida: float
+        """
+        return sum(i ** 2 for i in self) ** 0.5
+
+    def __floordiv__(self, other):
+        """
+        Descripción: Determina la componente tangencial (paralelo, //)
+        Args: (Vector, Vector)
+        Salida: Vector
+        """
+        den = abs(other) ** 2
+        num = other @ self
+        return Vector(round(otro * num / den, 1) for otro in other)
+    
+    __rfloordiv__ = __floordiv__
+
+    def __mod__ (self, other):
+        """
+        Descripción: Determina la componente normal de un vector respecto otro (perpendicular, %)
+        Args: (Vector, Vector)
+        Salida: Vector
+        """
+        componente_paralela = self // other
+        componente_perpendicular = self - componente_paralela
+        return Vector(round(i, 1) for i in componente_perpendicular)
+    
+    __rmod__ = __mod__
+
+```
 
 #### Subida del resultado al repositorio GitHub y *pull-request*
 
